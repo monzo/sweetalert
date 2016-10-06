@@ -2,7 +2,8 @@ var alertTypes = ['error', 'warning', 'info', 'success', 'input', 'prompt'];
 
 import {
   isIE8,
-  inputTagNameSetting
+    inputTagNameSetting,
+    logStr
 } from './utils';
 
 import {
@@ -113,10 +114,10 @@ var setParameters = function(params) {
           $input.setAttribute('rows', params.textareaRows);
           addClass(modal, 'show-textarea');
         }
-        
+
         $input.value = params.inputValue;
         $input.setAttribute('placeholder', params.inputPlaceholder);
-        
+
         setTimeout(function () {
           $input.focus();
           $input.addEventListener('keyup', swal.resetInputError);

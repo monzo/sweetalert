@@ -6,7 +6,7 @@ import { hasClass, isDescendant } from './handle-dom';
 /*
  * User clicked on "Confirm"/"OK" or "Cancel"
  */
-var handleButton = function(event, params, modal) {
+export function handleButton (event, params, modal) {
   var e = event || window.event;
   var target = e.target || e.srcElement;
 
@@ -76,12 +76,12 @@ var handleButton = function(event, params, modal) {
       }
       break;
   }
-};
+}
 
 /*
  *  User clicked on "Confirm"/"OK"
  */
-var handleConfirm = function(modal, params) {
+export function handleConfirm (modal, params) {
   var callbackValue = true;
 
   if (hasClass(modal, 'show-input') || hasClass(modal, 'show-textarea')) {
@@ -101,12 +101,12 @@ var handleConfirm = function(modal, params) {
   if (params.showLoaderOnConfirm) {
     sweetAlert.disableButtons();
   }
-};
+}
 
 /*
  *  User clicked on "Cancel"
  */
-var handleCancel = function(modal, params) {
+export function handleCancel (modal, params) {
   // Check if callback function expects a parameter (to track cancel actions)
   var functionAsStr = String(params.doneFunction).replace(/\s/g, '');
   var functionHandlesCancel = functionAsStr.substring(0, 9) === 'function(' && functionAsStr.substring(9, 10) !== ')';
@@ -118,11 +118,4 @@ var handleCancel = function(modal, params) {
   if (params.closeOnCancel) {
     sweetAlert.close();
   }
-};
-
-
-export default {
-  handleButton,
-  handleConfirm,
-  handleCancel
-};
+}

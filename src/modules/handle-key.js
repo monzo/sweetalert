@@ -1,20 +1,15 @@
-'use strict';
+import { stopEventPropagation, fireClick } from './handle-dom';
+import { setFocusStyle } from './handle-swal-dom';
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
 
-var _handleDom = require('./handle-dom');
-
-var _handleSwalDom = require('./handle-swal-dom');
-
-var handleKeyDown = function handleKeyDown(event, params, modal) {
+var handleKeyDown = function(event, params, modal) {
   var e = event || window.event;
   var keyCode = e.keyCode || e.which;
 
-  var $okButton = modal.querySelector('button.confirm');
+  var $okButton     = modal.querySelector('button.confirm');
   var $cancelButton = modal.querySelector('button.cancel');
   var $modalButtons = modal.querySelectorAll('button[tabindex]');
+
 
   if ([9, 13, 32, 27].indexOf(keyCode) === -1) {
     // Don't do work on keys we don't care about.
@@ -45,14 +40,19 @@ var handleKeyDown = function handleKeyDown(event, params, modal) {
       }
     }
 
-    (0, _handleDom.stopEventPropagation)(e);
+    stopEventPropagation(e);
     $targetElement.focus();
 
     if (params.confirmButtonColor) {
-      (0, _handleSwalDom.setFocusStyle)($targetElement, params.confirmButtonColor);
+      setFocusStyle($targetElement, params.confirmButtonColor);
     }
   } else {
     if (keyCode === 13) {
+      if (e.ctrlKey || e.metaKey) {
+        fireClick($okButton);
+        return;
+      }
+
       if ($targetElement.tagName === 'INPUT') {
         $targetElement = $okButton;
         $okButton.focus();
@@ -67,7 +67,7 @@ var handleKeyDown = function handleKeyDown(event, params, modal) {
       }
     } else if (keyCode === 27 && params.allowEscapeKey === true) {
       $targetElement = $cancelButton;
-      (0, _handleDom.fireClick)($targetElement, e);
+      fireClick($targetElement, e);
     } else {
       // Fallback - let the browser handle it.
       $targetElement = undefined;
@@ -75,5 +75,4 @@ var handleKeyDown = function handleKeyDown(event, params, modal) {
   }
 };
 
-exports['default'] = handleKeyDown;
-module.exports = exports['default'];
+export default handleKeyDown;

@@ -48,6 +48,11 @@ var handleKeyDown = function(event, params, modal) {
     }
   } else {
     if (keyCode === 13) {
+      if (e.ctrlKey || e.metaKey) {
+        fireClick($okButton);
+        return;
+      }
+
       if ($targetElement.tagName === 'INPUT') {
         $targetElement = $okButton;
         $okButton.focus();

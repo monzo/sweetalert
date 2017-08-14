@@ -58,6 +58,7 @@ import setParameters from './modules/set-params';
  */
 var previousWindowKeyDown;
 var lastFocusedButton;
+var closing = false;
 
 
 /*
@@ -67,6 +68,7 @@ var lastFocusedButton;
 var sweetAlert, swal;
 
 export default sweetAlert = swal = function() {
+  closing = false
   var customizations = arguments[0];
 
   addClass(document.body, 'stop-scrolling');
@@ -196,47 +198,54 @@ sweetAlert.setDefaults = swal.setDefaults = function(userParams) {
  * Animation when closing modal
  */
 sweetAlert.close = swal.close = function() {
-  var modal = getModal();
+  closing = true;
 
-  fadeOut(getOverlay(), 5);
-  fadeOut(modal, 5);
-  removeClass(modal, 'showSweetAlert');
-  addClass(modal, 'hideSweetAlert');
-  removeClass(modal, 'visible');
-
-  /*
-   * Reset icon animations
-   */
-  var $successIcon = modal.querySelector('.sa-icon.sa-success');
-  removeClass($successIcon, 'animate');
-  removeClass($successIcon.querySelector('.sa-tip'), 'animateSuccessTip');
-  removeClass($successIcon.querySelector('.sa-long'), 'animateSuccessLong');
-
-  var $errorIcon = modal.querySelector('.sa-icon.sa-error');
-  removeClass($errorIcon, 'animateErrorIcon');
-  removeClass($errorIcon.querySelector('.sa-x-mark'), 'animateXMark');
-
-  var $warningIcon = modal.querySelector('.sa-icon.sa-warning');
-  removeClass($warningIcon, 'pulseWarning');
-  removeClass($warningIcon.querySelector('.sa-body'), 'pulseWarningIns');
-  removeClass($warningIcon.querySelector('.sa-dot'), 'pulseWarningIns');
-
-  // Reset custom class (delay so that UI changes aren't visible)
   setTimeout(function() {
-    var customClass = modal.getAttribute('data-custom-class');
-    removeClass(modal, customClass);
-  }, 300);
+    if (!closing) return
 
-  // Make page scrollable again
-  removeClass(document.body, 'stop-scrolling');
+    var modal = getModal();
 
-  // Reset the page to its previous state
-  window.onkeydown = previousWindowKeyDown;
-  if (window.previousActiveElement) {
-    window.previousActiveElement.focus();
-  }
-  lastFocusedButton = undefined;
-  clearTimeout(modal.timeout);
+    fadeOut(getOverlay(), 5);
+    fadeOut(modal, 5);
+    removeClass(modal, 'showSweetAlert');
+    addClass(modal, 'hideSweetAlert');
+    removeClass(modal, 'visible');
+
+    /*
+     * Reset icon animations
+     */
+    var $successIcon = modal.querySelector('.sa-icon.sa-success');
+    removeClass($successIcon, 'animate');
+    removeClass($successIcon.querySelector('.sa-tip'), 'animateSuccessTip');
+    removeClass($successIcon.querySelector('.sa-long'), 'animateSuccessLong');
+
+    var $errorIcon = modal.querySelector('.sa-icon.sa-error');
+    removeClass($errorIcon, 'animateErrorIcon');
+    removeClass($errorIcon.querySelector('.sa-x-mark'), 'animateXMark');
+
+    var $warningIcon = modal.querySelector('.sa-icon.sa-warning');
+    removeClass($warningIcon, 'pulseWarning');
+    removeClass($warningIcon.querySelector('.sa-body'), 'pulseWarningIns');
+    removeClass($warningIcon.querySelector('.sa-dot'), 'pulseWarningIns');
+
+    // Reset custom class (delay so that UI changes aren't visible)
+    setTimeout(function() {
+      var customClass = modal.getAttribute('data-custom-class');
+      removeClass(modal, customClass);
+    }, 300);
+
+    // Make page scrollable again
+    removeClass(document.body, 'stop-scrolling');
+
+    // Reset the page to its previous state
+    window.onkeydown = previousWindowKeyDown;
+    if (window.previousActiveElement) {
+      window.previousActiveElement.focus();
+    }
+    lastFocusedButton = undefined;
+    clearTimeout(modal.timeout);
+
+  }, 0)
 
   return true;
 };

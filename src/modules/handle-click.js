@@ -107,7 +107,7 @@ export function handleConfirm (modal, params) {
  *  User clicked on "Cancel"
  */
 export function handleCancel (modal, params) {
-  if (params.doneFunction.length > 0) {
+  if (typeof params.doneFunction === 'function' && params.doneFunction.length > 0) {
     params.doneFunction(false);
   }
 
